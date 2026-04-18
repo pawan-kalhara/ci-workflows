@@ -1,0 +1,16 @@
+name: Docker CI
+
+on: [push]
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - run: |
+          echo "FROM alpine:latest" > Dockerfile
+          echo "CMD echo Hello World" >> Dockerfile
+
+      - run: docker build -t test-image .
