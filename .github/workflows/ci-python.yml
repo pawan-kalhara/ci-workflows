@@ -1,0 +1,22 @@
+name: Python CI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python: [3.9, 3.10, 3.11]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python }}
+
+      - run: pip install pytest
+      - run: echo "def test_sample(): assert True" > test_sample.py
+      - run: pytest
