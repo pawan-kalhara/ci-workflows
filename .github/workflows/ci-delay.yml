@@ -1,0 +1,12 @@
+name: Delay CI
+
+on: [push]
+
+jobs:
+  delay:
+    runs-on: ubuntu-latest
+
+    steps:
+      - run: echo "Starting delay..."
+      - run: sleep 10
+      - run: echo "Finished"
