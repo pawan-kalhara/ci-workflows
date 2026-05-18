@@ -11,14 +11,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       
-      # NO CACHING - Install Node.js without cache
-      - name: Setup Node.js (NO CACHE)
+      
+      - name: Setup Node.js (WITH CACHE)
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          # Intentionally NO cache parameter
+          cache: 'npm'  # ← THIS LINE MAKES IT FAST
       
-      # Create a package.json with MANY heavy dependencies
+      # Create the SAME package.json
       - name: Create package.json with heavy dependencies
         run: |
           cat > package.json << 'EOF'
@@ -89,15 +89,15 @@ jobs:
           }
           EOF
       
-      # SLOW: Fresh npm install every time (90-120 seconds)
-      - name: Install dependencies (SLOW - downloading everything)
+      # caching
+      - name: Install dependencies (using cache)
         run: |
-          echo "⏳ Installing 50+ packages from scratch..."
-          echo "This will take 90-120 seconds..."
+          echo "⚡ Installing packages from cache..."
+          echo "This will only take 5-15 seconds!"
           npm install
-          echo "✅ Installation complete!"
+          echo "✅ Installation complete (cached)!"
       
-      # Additional build steps to increase time
+      # Same build steps but run much faster overall
       - name: Run TypeScript compilation
         run: |
           echo "Compiling TypeScript..."
@@ -135,3 +135,4 @@ jobs:
           echo "Running final checks..."
           sleep 10
           echo "All checks passed!"
+      
