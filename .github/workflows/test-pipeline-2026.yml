@@ -119,23 +119,6 @@ jobs:
           sleep 20
           echo "Tests passed!"
       
-      - name: Build application
-        run: |
-          echo "Building production bundle..."
-          npm run build
-          sleep 15
-          echo "Build complete!"
-      
-      - name: Generate documentation
-        run: |
-          echo "Generating documentation..."
-          sleep 10
-          echo "Documentation generated!"
-      
-      - name: Run final checks
-        run: |
-          echo "Running final checks..."
-          sleep 10
-          echo "All checks passed!"
+
       
  
