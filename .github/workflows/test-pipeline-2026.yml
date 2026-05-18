@@ -11,14 +11,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       
-      
-      - name: Setup Node.js (WITH CACHE)
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'  # ← THIS LINE MAKES IT FAST
-      
-      # Create the SAME package.json
+      # Create package.json FIRST (before cache step)
       - name: Create package.json with heavy dependencies
         run: |
           cat > package.json << 'EOF'
@@ -89,15 +82,24 @@ jobs:
           }
           EOF
       
-      # caching
-      - name: Install dependencies (using cache)
-        run: |
-          echo "⚡ Installing packages from cache..."
-          echo "This will only take 5-15 seconds!"
-          npm install
-          echo "✅ Installation complete (cached)!"
+      # Generate package-lock.json (required for npm cache)
+      - name: Generate package-lock.json
+        run: npm install --package-lock-only
       
-      # Same build steps but run much faster overall
+      
+      - name: Setup Node.js with cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      
+      - name: Install dependencies
+        run: |
+          echo " Installing packages..."
+          npm ci
+          echo " Installation complete!"
+      
       - name: Run TypeScript compilation
         run: |
           echo "Compiling TypeScript..."
@@ -136,3 +138,4 @@ jobs:
           sleep 10
           echo "All checks passed!"
       
+ 
