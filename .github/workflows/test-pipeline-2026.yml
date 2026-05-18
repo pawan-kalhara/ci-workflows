@@ -104,19 +104,19 @@ jobs:
         run: |
           echo "Compiling TypeScript..."
           npx tsc --init
-          sleep 15
+          sleep 1
           echo "TypeScript compilation done!"
       
       - name: Run ESLint
         run: |
           echo "Running ESLint..."
-          sleep 10
+          sleep 1
           echo "Linting complete!"
       
       - name: Run tests
         run: |
           echo "Running test suite..."
-          sleep 20
+          sleep 1
           echo "Tests passed!"
       
 
