@@ -1,0 +1,74 @@
+name: Build Demo - No Cache
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-heavy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      # NO CACHING - This is key!
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          # Intentionally NO cache parameter
+      
+      - name: Create package.json with many dependencies
+        run: |
+          cat > package.json << 'EOF'
+          {
+            "name": "heavy-demo",
+            "version": "1.0.0",
+            "dependencies": {
+              "express": "^4.18.2",
+              "axios": "^1.6.0",
+              "lodash": "^4.17.21",
+              "react": "^18.2.0",
+              "react-dom": "^18.2.0",
+              "typescript": "^5.0.0",
+              "@types/node": "^20.0.0",
+              "@types/react": "^18.2.0",
+              "webpack": "^5.88.0",
+              "webpack-cli": "^5.1.0",
+              "babel-loader": "^9.1.0",
+              "@babel/core": "^7.22.0",
+              "@babel/preset-env": "^7.22.0",
+              "@babel/preset-react": "^7.22.0",
+              "eslint": "^8.45.0",
+              "prettier": "^3.0.0",
+              "jest": "^29.6.0",
+              "@testing-library/react": "^14.0.0",
+              "date-fns": "^2.30.0",
+              "moment": "^2.29.4",
+              "chart.js": "^4.3.0",
+              "d3": "^7.8.5"
+            },
+            "devDependencies": {
+              "@types/jest": "^29.5.0",
+              "@typescript-eslint/eslint-plugin": "^6.0.0",
+              "@typescript-eslint/parser": "^6.0.0"
+            }
+          }
+          EOF
+      
+      - name: Install dependencies (takes 60-90 seconds)
+        run: |
+          echo "Installing dependencies without cache..."
+          npm install
+          echo "Installation complete!"
+      
+      - name: Run build simulation
+        run: |
+          echo "Building application..."
+          npm run build || echo "Build simulation complete"
+      
+      - name: Additional processing
+        run: |
+          echo "Running additional tasks..."
+          sleep 30
+          echo "Tasks complete!"
